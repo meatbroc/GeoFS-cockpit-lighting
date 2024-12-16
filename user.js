@@ -1,21 +1,19 @@
-function findQsPrimitiveIndex() {
-    return geofs.api.viewer.scene.primitives._primitives.findIndex(
+function findIndexes() {
+    const primIndex = geofs.api.viewer.scene.primitives._primitives.findIndex(
         primitive => 
             primitive._primitives &&
             Array.isArray(primitive._primitives) &&
             primitive.show === true                // Additional condition
     );
-}
-const qsIndex = findQsPrimitiveIndex();
-function findCockpitIndex() {
-    return geofs.api.viewer.scene.primitives._primitives[qsIndex]._primitives.findIndex(
+    return [ primIndex, geofs.api.viewer.scene.primitives._primitives[primIndex]._primitives.findIndex(
         primitive => 
             primitive._resource._url.toString().includes('cockpit')   // Additional condition
-    );
+    ) ]
 }
-const cockpitIndex = findCockpitIndex()
+;
 function applyCustomShaders() {
-    const cockpitPrimitive = geofs.api.viewer.scene.primitives._primitives[4]._primitives[2];
+    const indexes = findIndexes();
+    const cockpitPrimitive = geofs.api.viewer.scene.primitives._primitives[indexes[0]]._primitives[indexes[1]];
 
     if (!cockpitPrimitive) {
         console.error("Cockpit primitive not found.");
